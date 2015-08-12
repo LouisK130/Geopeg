@@ -2,9 +2,6 @@
 Thumbs.db
 ehthumbs.db
 
-# Geopeg file with AWS credentials
-geopeg_config.php
-
 # Folder config file
 Desktop.ini
 
