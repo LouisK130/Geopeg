@@ -1,0 +1,562 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4FAE2D1E1B3F543A00C67DBF /* GeopegUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE2D1B1B3F543A00C67DBF /* GeopegUtil.m */; };
+		4FAE2D1F1B3F543A00C67DBF /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */; };
+		4FBB438E1B475BFB001D08DC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBB438D1B475BFB001D08DC /* CoreLocation.framework */; };
+		4FC690511B7178C70077E83E /* GeopegS3Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FC690501B7178C70077E83E /* GeopegS3Util.m */; };
+		4FCE22231B3635E3007DA5C0 /* PassResetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE22221B3635E3007DA5C0 /* PassResetViewController.m */; };
+		4FCE22261B371F94007DA5C0 /* GeopegDownloadUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE22251B371F94007DA5C0 /* GeopegDownloadUtil.m */; };
+		4FCE22281B373067007DA5C0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FCE22271B373067007DA5C0 /* libsqlite3.dylib */; };
+		4FCE222B1B3730A4007DA5C0 /* GeopegSQLiteUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE222A1B3730A4007DA5C0 /* GeopegSQLiteUtil.m */; };
+		4FD54E571B096D7700CE7310 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FD54E561B096D7700CE7310 /* LoginViewController.m */; };
+		4FD54E5D1B1118FE00CE7310 /* GeopegLocationUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FD54E5C1B1118FE00CE7310 /* GeopegLocationUtil.m */; };
+		4FE0AF0F1AD31F9A007B0366 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF0E1AD31F9A007B0366 /* main.m */; };
+		4FE0AF121AD31F9A007B0366 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF111AD31F9A007B0366 /* AppDelegate.m */; };
+		4FE0AF151AD31F9A007B0366 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF141AD31F9A007B0366 /* FirstViewController.m */; };
+		4FE0AF181AD31F9A007B0366 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF171AD31F9A007B0366 /* SecondViewController.m */; };
+		4FE0AF1B1AD31F9A007B0366 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FE0AF191AD31F9A007B0366 /* Main.storyboard */; };
+		4FE0AF1D1AD31F9A007B0366 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FE0AF1C1AD31F9A007B0366 /* Images.xcassets */; };
+		4FE0AF201AD31F9A007B0366 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FE0AF1E1AD31F9A007B0366 /* LaunchScreen.xib */; };
+		4FE0AF2C1AD31F9A007B0366 /* GeopegTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF2B1AD31F9A007B0366 /* GeopegTests.m */; };
+		4FE0AF3A1AD357EB007B0366 /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0AF391AD357EB007B0366 /* LaunchViewController.m */; };
+		EB8F580A7DE22AE74157E46B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DECEC3720F1BE67D548226EE /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4FE0AF261AD31F9A007B0366 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FE0AF011AD31F9A007B0366 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4FE0AF081AD31F9A007B0366;
+			remoteInfo = Geopeg;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		23D5086A9D3747235DF34B10 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		4FAE2D1A1B3F543A00C67DBF /* GeopegUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegUtil.h; sourceTree = "<group>"; };
+		4FAE2D1B1B3F543A00C67DBF /* GeopegUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegUtil.m; sourceTree = "<group>"; };
+		4FAE2D1C1B3F543A00C67DBF /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
+		4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
+		4FBB438D1B475BFB001D08DC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4FC6904F1B7178C70077E83E /* GeopegS3Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegS3Util.h; sourceTree = "<group>"; };
+		4FC690501B7178C70077E83E /* GeopegS3Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegS3Util.m; sourceTree = "<group>"; };
+		4FCE22211B3635E3007DA5C0 /* PassResetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PassResetViewController.h; sourceTree = "<group>"; };
+		4FCE22221B3635E3007DA5C0 /* PassResetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PassResetViewController.m; sourceTree = "<group>"; };
+		4FCE22241B371F94007DA5C0 /* GeopegDownloadUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegDownloadUtil.h; sourceTree = "<group>"; };
+		4FCE22251B371F94007DA5C0 /* GeopegDownloadUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegDownloadUtil.m; sourceTree = "<group>"; };
+		4FCE22271B373067007DA5C0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		4FCE22291B3730A4007DA5C0 /* GeopegSQLiteUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegSQLiteUtil.h; sourceTree = "<group>"; };
+		4FCE222A1B3730A4007DA5C0 /* GeopegSQLiteUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegSQLiteUtil.m; sourceTree = "<group>"; };
+		4FD54E551B096D7700CE7310 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		4FD54E561B096D7700CE7310 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		4FD54E5B1B1118FE00CE7310 /* GeopegLocationUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegLocationUtil.h; sourceTree = "<group>"; };
+		4FD54E5C1B1118FE00CE7310 /* GeopegLocationUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegLocationUtil.m; sourceTree = "<group>"; };
+		4FE0AF091AD31F9A007B0366 /* Geopeg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geopeg.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FE0AF0D1AD31F9A007B0366 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FE0AF0E1AD31F9A007B0366 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4FE0AF101AD31F9A007B0366 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4FE0AF111AD31F9A007B0366 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4FE0AF131AD31F9A007B0366 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		4FE0AF141AD31F9A007B0366 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		4FE0AF161AD31F9A007B0366 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		4FE0AF171AD31F9A007B0366 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		4FE0AF1A1AD31F9A007B0366 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4FE0AF1C1AD31F9A007B0366 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		4FE0AF1F1AD31F9A007B0366 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		4FE0AF251AD31F9A007B0366 /* GeopegTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeopegTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FE0AF2A1AD31F9A007B0366 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FE0AF2B1AD31F9A007B0366 /* GeopegTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GeopegTests.m; sourceTree = "<group>"; };
+		4FE0AF381AD357EB007B0366 /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchViewController.h; sourceTree = "<group>"; };
+		4FE0AF391AD357EB007B0366 /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchViewController.m; sourceTree = "<group>"; };
+		988AD2B51C507F5478406ABB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		DECEC3720F1BE67D548226EE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4FE0AF061AD31F9A007B0366 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FBB438E1B475BFB001D08DC /* CoreLocation.framework in Frameworks */,
+				4FCE22281B373067007DA5C0 /* libsqlite3.dylib in Frameworks */,
+				EB8F580A7DE22AE74157E46B /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FE0AF221AD31F9A007B0366 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		34D7456DBE27BB9464765407 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				23D5086A9D3747235DF34B10 /* Pods.debug.xcconfig */,
+				988AD2B51C507F5478406ABB /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		4FE0AF001AD31F9A007B0366 = {
+			isa = PBXGroup;
+			children = (
+				4FCE22271B373067007DA5C0 /* libsqlite3.dylib */,
+				4FE0AF0B1AD31F9A007B0366 /* Geopeg */,
+				4FE0AF281AD31F9A007B0366 /* GeopegTests */,
+				4FE0AF0A1AD31F9A007B0366 /* Products */,
+				34D7456DBE27BB9464765407 /* Pods */,
+				9388E2C9EBFF8C96D6969603 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4FE0AF0A1AD31F9A007B0366 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4FE0AF091AD31F9A007B0366 /* Geopeg.app */,
+				4FE0AF251AD31F9A007B0366 /* GeopegTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4FE0AF0B1AD31F9A007B0366 /* Geopeg */ = {
+			isa = PBXGroup;
+			children = (
+				4FC6904F1B7178C70077E83E /* GeopegS3Util.h */,
+				4FC690501B7178C70077E83E /* GeopegS3Util.m */,
+				4FAE2D1A1B3F543A00C67DBF /* GeopegUtil.h */,
+				4FAE2D1B1B3F543A00C67DBF /* GeopegUtil.m */,
+				4FAE2D1C1B3F543A00C67DBF /* RegisterViewController.h */,
+				4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */,
+				4FCE22211B3635E3007DA5C0 /* PassResetViewController.h */,
+				4FCE22221B3635E3007DA5C0 /* PassResetViewController.m */,
+				4FD54E551B096D7700CE7310 /* LoginViewController.h */,
+				4FD54E561B096D7700CE7310 /* LoginViewController.m */,
+				4FD54E5B1B1118FE00CE7310 /* GeopegLocationUtil.h */,
+				4FD54E5C1B1118FE00CE7310 /* GeopegLocationUtil.m */,
+				4FE0AF381AD357EB007B0366 /* LaunchViewController.h */,
+				4FE0AF391AD357EB007B0366 /* LaunchViewController.m */,
+				4FE0AF101AD31F9A007B0366 /* AppDelegate.h */,
+				4FE0AF111AD31F9A007B0366 /* AppDelegate.m */,
+				4FE0AF131AD31F9A007B0366 /* FirstViewController.h */,
+				4FE0AF141AD31F9A007B0366 /* FirstViewController.m */,
+				4FE0AF161AD31F9A007B0366 /* SecondViewController.h */,
+				4FE0AF171AD31F9A007B0366 /* SecondViewController.m */,
+				4FE0AF191AD31F9A007B0366 /* Main.storyboard */,
+				4FCE22241B371F94007DA5C0 /* GeopegDownloadUtil.h */,
+				4FCE22251B371F94007DA5C0 /* GeopegDownloadUtil.m */,
+				4FCE22291B3730A4007DA5C0 /* GeopegSQLiteUtil.h */,
+				4FCE222A1B3730A4007DA5C0 /* GeopegSQLiteUtil.m */,
+				4FE0AF1C1AD31F9A007B0366 /* Images.xcassets */,
+				4FE0AF1E1AD31F9A007B0366 /* LaunchScreen.xib */,
+				4FE0AF0C1AD31F9A007B0366 /* Supporting Files */,
+			);
+			path = Geopeg;
+			sourceTree = "<group>";
+		};
+		4FE0AF0C1AD31F9A007B0366 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4FE0AF0D1AD31F9A007B0366 /* Info.plist */,
+				4FE0AF0E1AD31F9A007B0366 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4FE0AF281AD31F9A007B0366 /* GeopegTests */ = {
+			isa = PBXGroup;
+			children = (
+				4FE0AF2B1AD31F9A007B0366 /* GeopegTests.m */,
+				4FE0AF291AD31F9A007B0366 /* Supporting Files */,
+			);
+			path = GeopegTests;
+			sourceTree = "<group>";
+		};
+		4FE0AF291AD31F9A007B0366 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4FE0AF2A1AD31F9A007B0366 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9388E2C9EBFF8C96D6969603 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4FBB438D1B475BFB001D08DC /* CoreLocation.framework */,
+				DECEC3720F1BE67D548226EE /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4FE0AF081AD31F9A007B0366 /* Geopeg */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FE0AF2F1AD31F9A007B0366 /* Build configuration list for PBXNativeTarget "Geopeg" */;
+			buildPhases = (
+				ED37DA3B5EA1BAE1BDC3E0A5 /* Check Pods Manifest.lock */,
+				4FE0AF051AD31F9A007B0366 /* Sources */,
+				4FE0AF061AD31F9A007B0366 /* Frameworks */,
+				4FE0AF071AD31F9A007B0366 /* Resources */,
+				34C5C0311BD63EA039E742E4 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Geopeg;
+			productName = Geopeg;
+			productReference = 4FE0AF091AD31F9A007B0366 /* Geopeg.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4FE0AF241AD31F9A007B0366 /* GeopegTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FE0AF321AD31F9A007B0366 /* Build configuration list for PBXNativeTarget "GeopegTests" */;
+			buildPhases = (
+				4FE0AF211AD31F9A007B0366 /* Sources */,
+				4FE0AF221AD31F9A007B0366 /* Frameworks */,
+				4FE0AF231AD31F9A007B0366 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4FE0AF271AD31F9A007B0366 /* PBXTargetDependency */,
+			);
+			name = GeopegTests;
+			productName = GeopegTests;
+			productReference = 4FE0AF251AD31F9A007B0366 /* GeopegTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4FE0AF011AD31F9A007B0366 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = "Geopeg App";
+				TargetAttributes = {
+					4FE0AF081AD31F9A007B0366 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					4FE0AF241AD31F9A007B0366 = {
+						CreatedOnToolsVersion = 6.2;
+						TestTargetID = 4FE0AF081AD31F9A007B0366;
+					};
+				};
+			};
+			buildConfigurationList = 4FE0AF041AD31F9A007B0366 /* Build configuration list for PBXProject "Geopeg" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4FE0AF001AD31F9A007B0366;
+			productRefGroup = 4FE0AF0A1AD31F9A007B0366 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4FE0AF081AD31F9A007B0366 /* Geopeg */,
+				4FE0AF241AD31F9A007B0366 /* GeopegTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4FE0AF071AD31F9A007B0366 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FE0AF1B1AD31F9A007B0366 /* Main.storyboard in Resources */,
+				4FE0AF201AD31F9A007B0366 /* LaunchScreen.xib in Resources */,
+				4FE0AF1D1AD31F9A007B0366 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FE0AF231AD31F9A007B0366 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		34C5C0311BD63EA039E742E4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED37DA3B5EA1BAE1BDC3E0A5 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4FE0AF051AD31F9A007B0366 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FAE2D1E1B3F543A00C67DBF /* GeopegUtil.m in Sources */,
+				4FCE222B1B3730A4007DA5C0 /* GeopegSQLiteUtil.m in Sources */,
+				4FCE22261B371F94007DA5C0 /* GeopegDownloadUtil.m in Sources */,
+				4FD54E571B096D7700CE7310 /* LoginViewController.m in Sources */,
+				4FE0AF181AD31F9A007B0366 /* SecondViewController.m in Sources */,
+				4FE0AF121AD31F9A007B0366 /* AppDelegate.m in Sources */,
+				4FCE22231B3635E3007DA5C0 /* PassResetViewController.m in Sources */,
+				4FE0AF151AD31F9A007B0366 /* FirstViewController.m in Sources */,
+				4FE0AF3A1AD357EB007B0366 /* LaunchViewController.m in Sources */,
+				4FC690511B7178C70077E83E /* GeopegS3Util.m in Sources */,
+				4FD54E5D1B1118FE00CE7310 /* GeopegLocationUtil.m in Sources */,
+				4FAE2D1F1B3F543A00C67DBF /* RegisterViewController.m in Sources */,
+				4FE0AF0F1AD31F9A007B0366 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FE0AF211AD31F9A007B0366 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FE0AF2C1AD31F9A007B0366 /* GeopegTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4FE0AF271AD31F9A007B0366 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FE0AF081AD31F9A007B0366 /* Geopeg */;
+			targetProxy = 4FE0AF261AD31F9A007B0366 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4FE0AF191AD31F9A007B0366 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FE0AF1A1AD31F9A007B0366 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4FE0AF1E1AD31F9A007B0366 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FE0AF1F1AD31F9A007B0366 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4FE0AF2D1AD31F9A007B0366 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4FE0AF2E1AD31F9A007B0366 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4FE0AF301AD31F9A007B0366 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 23D5086A9D3747235DF34B10 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Geopeg/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4FE0AF311AD31F9A007B0366 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 988AD2B51C507F5478406ABB /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Geopeg/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4FE0AF331AD31F9A007B0366 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GeopegTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Geopeg.app/Geopeg";
+			};
+			name = Debug;
+		};
+		4FE0AF341AD31F9A007B0366 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GeopegTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Geopeg.app/Geopeg";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4FE0AF041AD31F9A007B0366 /* Build configuration list for PBXProject "Geopeg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FE0AF2D1AD31F9A007B0366 /* Debug */,
+				4FE0AF2E1AD31F9A007B0366 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4FE0AF2F1AD31F9A007B0366 /* Build configuration list for PBXNativeTarget "Geopeg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FE0AF301AD31F9A007B0366 /* Debug */,
+				4FE0AF311AD31F9A007B0366 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4FE0AF321AD31F9A007B0366 /* Build configuration list for PBXNativeTarget "GeopegTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FE0AF331AD31F9A007B0366 /* Debug */,
+				4FE0AF341AD31F9A007B0366 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4FE0AF011AD31F9A007B0366 /* Project object */;
+}
