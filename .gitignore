@@ -43,6 +43,4 @@ Temporary Items
 .apdisk
 
 # XCode and Pod related things
-*.xcuserstate
-*.lock
 GeopegTests
