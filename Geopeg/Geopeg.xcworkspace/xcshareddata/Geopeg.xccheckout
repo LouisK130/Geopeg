@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>9A0497AF-3D7E-42EB-B726-1F5A00B87C7E</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Geopeg</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>0D725339DAAD3B473C44A333D9228FDA0F38DAD4</key>
+		<string>https://github.com/LouisK130/Geopeg.git</string>
+		<key>840693052C19BAE84D53FB837456F9B0E044BF07</key>
+		<string>https://github.com/LouisK130/Geopeg.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Geopeg.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0D725339DAAD3B473C44A333D9228FDA0F38DAD4</key>
+		<string>../..</string>
+		<key>840693052C19BAE84D53FB837456F9B0E044BF07</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/LouisK130/Geopeg.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>840693052C19BAE84D53FB837456F9B0E044BF07</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0D725339DAAD3B473C44A333D9228FDA0F38DAD4</string>
+			<key>IDESourceControlWCCName</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>840693052C19BAE84D53FB837456F9B0E044BF07</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Geopeg</string>
+		</dict>
+	</array>
+</dict>
+</plist>
