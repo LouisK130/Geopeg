@@ -2,17 +2,17 @@
 	
 	# The library we use to hash and compare passwords
 	
-	require "password_compat-master/lib/password.php";
+	require_once "password_compat-master/lib/password.php";
 	
 	# The needed files for AWS Cognito integration
 	
-	require "aws/aws-autoloader.php";
+	require_once "aws/aws-autoloader.php";
 	use Aws\CognitoIdentity\CognitoIdentityClient;
 	
 	# Some helper functions
 	
-	require "geopeg_util.php";
-    require "geopeg_config.php";
+    require_once "geopeg_config.php";
+	require_once "geopeg_util.php";
 	
 	# We need a username to begin with
 	
@@ -143,6 +143,8 @@
 	# Function declarations
 	
 	function GetAWSToken($token, $id) {
+        
+        globaL $geopeg_aws_key, $geopeg_aws_secret;
 		
 		try {
 		

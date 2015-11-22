@@ -6,11 +6,11 @@
 	
 	# The library we use to hash/verify temporary passwords
 	
-	require "password_compat-master/lib/password.php";
+	require_once "password_compat-master/lib/password.php";
 	
 	# Some helper functions
 	
-	require "geopeg_util.php";
+	require_once "geopeg_util.php";
 	
 	# We need a recovery token, email, and new pass
 	

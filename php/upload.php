@@ -1,14 +1,14 @@
 <?php
 	
-	# AWS required files for working with S3
+	# AWS require_onced files for working with S3
 	
-	require "aws/aws-autoloader.php";
+	require_once "aws/aws-autoloader.php";
 	use Aws\S3\S3Client;
 	
 	# Some helper functions
 	
-	require "geopeg_util.php";
-    require "geopeg_config.php";
+    require_once "geopeg_config.php";
+	require_once "geopeg_util.php";
 	
 	# We need a token, username, s3path, mgrsid
 	
@@ -32,7 +32,7 @@
 	
 	if(!$geopeg_id) {
 		
-		Geopeg_EchoResult("Failure", "Invalid token", array());
+		Geopeg_EchoResult("Failure", "Invalid token");
 		die();
 		
 	}
@@ -43,6 +43,8 @@
 	# Search for the file in this user's "folder" only
 	
 	$actual_s3_path = $geopeg_id .. "/" .. $s3_path;
+    
+    global $geopeg_aws_key, $geopeg_aws_secret;
 	
 	try {
 	

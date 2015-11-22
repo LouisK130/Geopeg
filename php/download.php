@@ -2,7 +2,7 @@
 	
 	# Some helper functions
 	
-	require "geopeg_util.php";
+	require_once "geopeg_util.php";
 	
 	# We need an MGRSID
 	

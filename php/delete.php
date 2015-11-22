@@ -1,14 +1,14 @@
 <?php
 	
-	# AWS required files for working with S3
+	# AWS require_onced files for working with S3
 	
-	require "aws/aws-autoloader.php";
+	require_once "aws/aws-autoloader.php";
 	use Aws\S3\S3Client;
 	
 	# Some helper functions
-	
-	require "geopeg_util.php";
-    require "geopeg_config.php";
+    
+    require_once "geopeg_config.php";
+	require_once "geopeg_util.php";
 	
 	# We need a token, username, s3path
 	
@@ -29,6 +29,8 @@
 	
 	# We're good to go, now we need
 	# To check that the claimed S3 upload actually occurred
+    
+    global $geopeg_aws_key, $geopeg_aws_secret;
 	
 	try {
 	

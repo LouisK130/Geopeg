@@ -1,4 +1,6 @@
 <?php
+    
+    require_once "geopeg_config.php";
 
 	function Geopeg_EchoResult($result, $message, $extras = array()) {
 		
@@ -19,7 +21,7 @@
 		
 	}
 	
-	# Other files use this to require that a given POST
+	# Other files use this to require_once that a given POST
 	# element be present to continue
 	# Returns:
 	# The element on success
@@ -44,10 +46,8 @@
 	# Null on error
 	
 	function Geopeg_GetMongoConn() {
-		
-		$mongo_server = "192.168.1.2:27000/geopeg";
-		$mongo_username = "php_user";
-		$mongo_pass = "73HlINW23yTF";
+        
+        global $mongo_server, $mongo_username, $mongo_pass;
 		
 		try {
 		
