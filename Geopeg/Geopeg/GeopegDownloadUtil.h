@@ -23,10 +23,10 @@
 // Both of these functions store information in their
 // respective NSCache declared above
 
-- (void) requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *) size startDate:(NSString *) startDate currentMGRS:(NSString *) currentMGRS completionBlock:(void (^) (NSNumber *)) block;
+- (void) requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *) size startDate:(NSString *) startDate currentMGRS:(NSString *) currentMGRS completionBlock:(void (^) (int)) block;
 
-- (void) requestSelfImageDataWithStartDate:(NSString *)startDate completionBlock:(void (^) (NSNumber *)) block;
+- (void) requestSelfImageDataWithStartDate:(NSString *)startDate completionBlock:(void (^) (int)) block;
 
-- (void) uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption completionBlock:(void (^) (NSNumber *)) block;
+- (void) uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption completionBlock:(void (^) (int)) block;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GeopegUtil.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

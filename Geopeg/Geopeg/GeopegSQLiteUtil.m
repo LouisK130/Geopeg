@@ -100,9 +100,11 @@ static GeopegSQLiteUtil *_sharedInstance;
         NSString *sqlStmt = @"SELECT * FROM geopegs WHERE s3path = ?";
         
         FMResultSet *set = [db executeQuery:sqlStmt withArgumentsInArray:[NSArray arrayWithObject:s3path]];
-        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *result = nil;
             
         while ([set next]) {
+            
+            result = [[NSMutableDictionary alloc] init];
                 
             // s3path is unique, we'll never loop more than one row
                 
@@ -132,7 +134,7 @@ static GeopegSQLiteUtil *_sharedInstance;
     else {
         
         NSLog(@"Error opening database for query");
-        return NULL;
+        return nil;
         
     }
     

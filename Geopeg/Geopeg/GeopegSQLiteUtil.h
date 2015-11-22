@@ -10,6 +10,9 @@
 #import <sqlite3.h>
 #import <FMDB.h>
 
+// Realistically, I think SQLite will only be used for self posted images
+// All others are too temporary to warrant long term storage
+
 @interface GeopegSQLiteUtil : NSObject {
     
     FMDatabase *db;

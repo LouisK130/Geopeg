@@ -211,7 +211,7 @@ typedef NS_ENUM(NSInteger, AWSURLSessionTaskType) {
                 }];
             }
         }
-        
+
         return task;
     }] continueWithSuccessBlock:^id(AWSTask *task) {
         AWSNetworkingRequest *request = delegate.request;
@@ -256,6 +256,10 @@ typedef NS_ENUM(NSInteger, AWSURLSessionTaskType) {
 #pragma mark - NSURLSessionTaskDelegate
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
+    if (error) {
+        AWSLogError(@"Session task failed with error: %@", error);
+    }
+    
     [[[AWSTask taskWithResult:nil] continueWithSuccessBlock:^id(AWSTask *task) {
         AWSURLSessionManagerDelegate *delegate = [self.sessionManagerDelegates objectForKey:@(sessionTask.taskIdentifier)];
         

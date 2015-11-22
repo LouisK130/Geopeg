@@ -56,7 +56,10 @@ static NSTimeInterval _clockskew = 0.0;
 
 + (NSDate *)aws_dateFromString:(NSString *)string {
     NSDate *parsedDate = nil;
-    NSArray *arrayOfDateFormat = @[AWSDateRFC822DateFormat1,AWSDateISO8601DateFormat1,AWSDateISO8601DateFormat2,AWSDateISO8601DateFormat3];
+    NSArray *arrayOfDateFormat = @[AWSDateRFC822DateFormat1,
+                                   AWSDateISO8601DateFormat1,
+                                   AWSDateISO8601DateFormat2,
+                                   AWSDateISO8601DateFormat3];
 
     for (NSString *dateFormat in arrayOfDateFormat) {
         if (!parsedDate) {
@@ -70,6 +73,22 @@ static NSTimeInterval _clockskew = 0.0;
 }
 
 + (NSDate *)aws_dateFromString:(NSString *)string format:(NSString *)dateFormat {
+    if ([dateFormat isEqualToString:AWSDateRFC822DateFormat1]) {
+        return [[NSDate aws_RFC822Date1Formatter] dateFromString:string];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat1]) {
+        return [[NSDate aws_ISO8601Date1Formatter] dateFromString:string];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat2]) {
+        return [[NSDate aws_ISO8601Date2Formatter] dateFromString:string];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat3]) {
+        return [[NSDate aws_ISO8601Date3Formatter] dateFromString:string];
+    }
+    if ([dateFormat isEqualToString:AWSDateShortDateFormat1]) {
+        return [[NSDate aws_ShortDateFormat1Formatter] dateFromString:string];
+    }
+
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
@@ -79,12 +98,98 @@ static NSTimeInterval _clockskew = 0.0;
 }
 
 - (NSString *)aws_stringValue:(NSString *)dateFormat {
+    if ([dateFormat isEqualToString:AWSDateRFC822DateFormat1]) {
+        return [[NSDate aws_RFC822Date1Formatter] stringFromDate:self];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat1]) {
+        return [[NSDate aws_ISO8601Date1Formatter] stringFromDate:self];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat2]) {
+        return [[NSDate aws_ISO8601Date2Formatter] stringFromDate:self];
+    }
+    if ([dateFormat isEqualToString:AWSDateISO8601DateFormat3]) {
+        return [[NSDate aws_ISO8601Date3Formatter] stringFromDate:self];
+    }
+    if ([dateFormat isEqualToString:AWSDateShortDateFormat1]) {
+        return [[NSDate aws_ShortDateFormat1Formatter] stringFromDate:self];
+    }
+
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     dateFormatter.dateFormat = dateFormat;
 
     return [dateFormatter stringFromDate:self];
+}
+
++ (NSDateFormatter *)aws_RFC822Date1Formatter {
+    static NSDateFormatter *_dateFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        _dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        _dateFormatter.dateFormat = AWSDateRFC822DateFormat1;
+    });
+
+    return _dateFormatter;
+}
+
++ (NSDateFormatter *)aws_ISO8601Date1Formatter {
+    static NSDateFormatter *_dateFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        _dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        _dateFormatter.dateFormat = AWSDateISO8601DateFormat1;
+    });
+
+    return _dateFormatter;
+}
+
++ (NSDateFormatter *)aws_ISO8601Date2Formatter {
+    static NSDateFormatter *_dateFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        _dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        _dateFormatter.dateFormat = AWSDateISO8601DateFormat2;
+    });
+
+    return _dateFormatter;
+}
+
++ (NSDateFormatter *)aws_ISO8601Date3Formatter {
+    static NSDateFormatter *_dateFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        _dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        _dateFormatter.dateFormat = AWSDateISO8601DateFormat3;
+    });
+
+    return _dateFormatter;
+}
+
++ (NSDateFormatter *)aws_ShortDateFormat1Formatter {
+    static NSDateFormatter *_dateFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+        _dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+        _dateFormatter.dateFormat = AWSDateShortDateFormat1;
+    });
+
+    return _dateFormatter;
 }
 
 + (void)aws_setRuntimeClockSkew:(NSTimeInterval)clockskew {
@@ -168,8 +273,13 @@ static NSTimeInterval _clockskew = 0.0;
 @implementation NSNumber (AWS)
 
 + (NSNumber *)aws_numberFromString:(NSString *)string {
-    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
-    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    static NSNumberFormatter *numberFormatter = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        numberFormatter = [NSNumberFormatter new];
+        numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    });
 
     return [numberFormatter numberFromString:string];
 }

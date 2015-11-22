@@ -22,7 +22,6 @@
 #import "AWSService.h"
 
 NSString *const AWSNetworkingErrorDomain = @"com.amazonaws.AWSNetworkingErrorDomain";
-NSString *const AWSiOSSDKVersion = @"2.2.3";
 
 #pragma mark - AWSHTTPMethod
 
@@ -165,6 +164,9 @@ NSString *const AWSiOSSDKVersion = @"2.2.3";
     configuration.responseSerializer = self.responseSerializer;
     configuration.responseInterceptors = [self.responseInterceptors copy];
     configuration.retryHandler = self.retryHandler;
+    configuration.maxRetryCount = self.maxRetryCount;
+    configuration.timeoutIntervalForRequest = self.timeoutIntervalForRequest;
+    configuration.timeoutIntervalForResource = self.timeoutIntervalForResource;
 
     return configuration;
 }
@@ -313,29 +315,34 @@ NSString *const AWSiOSSDKVersion = @"2.2.3";
 
 @interface AWSNetworkingRequestInterceptor()
 
+@property (nonatomic, strong) NSString *userAgent;
+
 @end
 
 @implementation AWSNetworkingRequestInterceptor
 
-- (NSString *)userAgent {
-    static NSString *_userAgent = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
-        NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
-        NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-        _userAgent = [NSString stringWithFormat:@"aws-sdk-iOS/%@ %@/%@ %@", AWSiOSSDKVersion, systemName, systemVersion, localeIdentifier];
-    });
+- (instancetype)init {
+    if (self = [super init]) {
+        _userAgent = [AWSServiceConfiguration baseUserAgent];
+    }
 
-    return _userAgent;
+    return self;
+}
+
+- (instancetype)initWithUserAgent:(NSString *)userAgent {
+    if (self = [super init]) {
+        _userAgent = userAgent;
+    }
+
+    return self;
 }
 
 - (AWSTask *)interceptRequest:(NSMutableURLRequest *)request {
     [request setValue:[[NSDate aws_clockSkewFixedDate] aws_stringValue:AWSDateISO8601DateFormat2]
    forHTTPHeaderField:@"X-Amz-Date"];
 
-    NSString *userAgent = [self userAgent];
-    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    [request setValue:self.userAgent
+   forHTTPHeaderField:@"User-Agent"];
     
     return [AWSTask taskWithResult:nil];
 }

@@ -30,4 +30,88 @@ static GeopegS3Util *_sharedInstance;
     
 }
 
+- (NSString *)generateRandomS3Path {
+    
+    // Make our string
+    NSMutableString *random = [NSMutableString stringWithCapacity: 30];
+    
+    // Loop and add random characters one at a time to proper length
+    for (int i=0; i<30; i++) {
+        
+        [random appendFormat:@"%C", [letters characterAtIndex:arc4random() % [letters length]]];
+        
+    }
+    
+    // return the string
+    return random;
+    
+}
+
+- (BOOL)copyFileToCacheFromURL:(NSURL *)url withNewName:(NSString *)newName {
+    
+    NSLog(@"Copying and deleting file");
+    
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    NSURL *cachesDir = [[fm URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    
+    bool result = [fm copyItemAtURL:url toURL:[cachesDir URLByAppendingPathComponent:newName] error:nil];
+    
+    if (!result) {
+        
+        return NO;
+        
+    }
+    
+    // If successful, delete old one
+    [fm removeItemAtURL:url error:nil];
+    
+    return YES;
+    
+}
+
+- (void) uploadGeopegWithURL:(NSURL *) url {
+    
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
+    
+    NSString *extension = [@"." stringByAppendingString:[url pathExtension]];
+    
+    NSString *userId = IP.geopegId;
+    NSString *pegID = [[self generateRandomS3Path] stringByAppendingString:extension];
+    NSString *s3Path = [[IP.identityId stringByAppendingString:@"/"] stringByAppendingString:pegID];
+    
+    NSString *newName = [[userId stringByAppendingString:@"_"] stringByAppendingString:pegID];
+    
+    AWSS3TransferManagerUploadRequest *uploadRequest = [AWSS3TransferManagerUploadRequest new];
+    uploadRequest.bucket = @"geopegbucket";
+    uploadRequest.body = url;
+    uploadRequest.key = s3Path;
+    
+    AWSS3TransferManager *tm = [AWSS3TransferManager defaultS3TransferManager];
+    
+    NSLog(@"Uploading...");
+    
+    [[tm upload:uploadRequest] continueWithExecutor:[AWSExecutor mainThreadExecutor] withBlock:^id(AWSTask *task) {
+        
+        if (task.error) {
+            
+            // Something went wrong...
+            NSLog(@"Something went wrong uploading geopeg:");
+            NSLog(@"%@", task.error);
+            
+        }
+        
+        if (task.result) {
+            
+            // It worked!
+            // Lets get rid of the image/video and cache it
+            
+            [self copyFileToCacheFromURL:url withNewName:newName];
+        }
+        
+        return nil;
+        
+    }];
+    
+}
+
 @end

@@ -12,55 +12,46 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <AWSCore/AWSCore.h>
+#import "GeopegIdentityProvider.h"
+#import "FDKeychain.h"
+
+typedef enum GeopegErrorCodes {GP_SUCCESS, GP_CONNECTION_FAILURE, GP_INTERNAL_ERROR, GP_JSONPARSE_FAILURE,
+                                GP_INVALID_CREDENTIALS} GeopegErrorCodes;
 
 @interface GeopegUtil : NSObject {
     
-    @public NSString *geopegToken;
-    @public NSString *awsID;
-    @public NSString *awsToken;
-    @public NSString *username;
-    @public NSString *email;
-    
-    enum GeopegRequestResult {
-        GEOPEG_INVALID_CREDENTIALS = -2,
-        GEOPEG_CONNECTION_FAILURE = -1,
-        GEOPEG_FAILURE = 0,
-        GEOPEG_SUCCESS = 1
-    };
+@public AWSCognitoCredentialsProvider *cp;
     
 }
 
-// Get the only available instance of this class
+// Set and get the aws creds provider object using singleton logic
 
-+ (GeopegUtil *) sharedInstance;
++ (AWSCognitoCredentialsProvider *)getCredsProvider;
+
++ (void)setCredsProvider:(AWSCognitoCredentialsProvider *)newCp;
 
 // Does some basic setup to make a URL request
 
-- (NSMutableURLRequest *)formatConnectionWithPostString:(NSString *)post filePath:(NSString *)path;
++ (NSMutableURLRequest *)formatConnectionWithPostString:(NSString *)post filePath:(NSString *)path;
 
 // Attempts to parse some assumed JSON data into an NSDictionary
 
-- (NSDictionary *)parseJSONResponse:(NSData *) data;
-
-// Attempt to refresh AWS Token after expiration
-// Note that username and geopegToken must be stored and valid also
-// Calls the given function, passing a success indicator as first param (-1 = connection error, 0 = failure, 1 = success)
-
-- (void)refreshAWSTokenWithBlock:(void (^) (NSNumber *)) block;
++ (NSDictionary *)parseJSONResponse:(NSData *) data;
 
 // Saves above values to disk for later use
 // Returns YES on success, NO on failure
 
-- (BOOL)saveUserValues;
++ (BOOL)saveUserValues;
 
 // Loads above values from disk to memory
 // Returns YES on success, NO on failure
 
-- (BOOL)loadUserValues;
++ (BOOL)loadUserValues;
 
 // Creates a standard alert that says Ok
 
-- (UIAlertController *)createOkAlertWithTitle:(NSString *) title message:(NSString *) message;
++ (UIAlertController *)createOkAlertWithTitle:(NSString *) title message:(NSString *) message;
 
 
 

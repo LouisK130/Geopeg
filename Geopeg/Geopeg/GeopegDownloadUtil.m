@@ -37,9 +37,7 @@ static GeopegDownloadUtil *_sharedInstance;
     
 }
 
-- (void)requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *)size startDate:(NSString *)startDate currentMGRS:(NSString *)currentMGRS completionBlock:(void (^)(NSNumber *))block {
-    
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+- (void)requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *)size startDate:(NSString *)startDate currentMGRS:(NSString *)currentMGRS completionBlock:(void (^)(int))block {
     
     // Format the request
     
@@ -51,29 +49,36 @@ static GeopegDownloadUtil *_sharedInstance;
         
     }
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"download.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"download.php"];
     
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
         if (error != nil || [data length] == 0) {
             
-            // Returning -1 means a real error
-            // Probably failed to make a connection
-            
             NSLog(@"Error with image data fetch request");
-            block([NSNumber numberWithInt:-1]);
+            block(GP_CONNECTION_FAILURE);
             return;
             
         }
         
         // Attempt to make the response a nice NSDictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
-            NSLog(@"Image data request failed: %@", [jsonResponse objectForKey:@"Message"]);
-            block(0);
+            NSString *msg = [jsonResponse objectForKey:@"Message"];
+            
+            NSLog(@"Image data request failed: %@", msg);
+            
+            if ([msg isEqualToString:@"Invalid token"]) {
+                
+                block(GP_INTERNAL_ERROR);
+                return;
+                
+            }
+            
+            block(GP_INTERNAL_ERROR);
             return;
             
         }
@@ -98,22 +103,22 @@ static GeopegDownloadUtil *_sharedInstance;
             
         }
         
-        block([NSNumber numberWithInt:1]);
+        block(GP_SUCCESS);
         
         
     }];
 
 }
 
-- (void)requestSelfImageDataWithStartDate:(NSString *)startDate completionBlock:(void (^)(NSNumber *))block {
+- (void)requestSelfImageDataWithStartDate:(NSString *)startDate completionBlock:(void (^)(int))block {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
     // Format the request
     
-    NSString *post = [NSString stringWithFormat:@"username=%@&token=%@&startdate=%@", util->username, util->geopegToken, startDate];
+    NSString *post = [NSString stringWithFormat:@"username=%@&token=%@&startdate=%@", IP.username, IP.geopegToken, startDate];
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"selfdownload.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"selfdownload.php"];
     
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
@@ -123,14 +128,14 @@ static GeopegDownloadUtil *_sharedInstance;
             // Probably failed to make a connection
             
             NSLog(@"Error with fetching self image data");
-            block([NSNumber numberWithInt:GEOPEG_CONNECTION_FAILURE]);
+            block(GP_CONNECTION_FAILURE);
             return;
             
         }
         
         // Attempt to make the response a nice NSDictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
@@ -140,12 +145,12 @@ static GeopegDownloadUtil *_sharedInstance;
             
             if ([msg isEqualToString:@"Invalid token"]) {
                 
-                block([NSNumber numberWithInt:GEOPEG_INVALID_CREDENTIALS]);
+                block(GP_INTERNAL_ERROR);
                 return;
                 
             }
             
-            block(GEOPEG_FAILURE);
+            block(GP_INTERNAL_ERROR);
             return;
             
         }
@@ -156,22 +161,22 @@ static GeopegDownloadUtil *_sharedInstance;
             
         }
         
-        block([NSNumber numberWithInt:GEOPEG_SUCCESS]);
+        block(GP_SUCCESS);
         
         
     }];
 
 }
 
-- (void)uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption completionBlock:(void (^)(NSNumber *))block {
+- (void)uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption completionBlock:(void (^)(int))block {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
     // Format the request
     
-    NSString *post = [NSString stringWithFormat:@"username=%@&token=%@&s3path=%@&mgrsid=%@&caption=%@", util->username, util->geopegToken, s3path, mgrsid, caption];
+    NSString *post = [NSString stringWithFormat:@"username=%@&token=%@&s3path=%@&mgrsid=%@&caption=%@", IP.username, IP.geopegToken, s3path, mgrsid, caption];
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"upload.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"upload.php"];
     
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
@@ -181,14 +186,14 @@ static GeopegDownloadUtil *_sharedInstance;
             // Probably failed to make a connection
             
             NSLog(@"Error with uploading image data");
-            block([NSNumber numberWithInt:GEOPEG_CONNECTION_FAILURE]);
+            block(GP_CONNECTION_FAILURE);
             return;
             
         }
         
         // Attempt to make the response a nice NSDictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
@@ -198,17 +203,17 @@ static GeopegDownloadUtil *_sharedInstance;
             
             if ([msg isEqualToString:@"Invalid token"]) {
                 
-                block([NSNumber numberWithInt:GEOPEG_INVALID_CREDENTIALS]);
+                block(GP_INTERNAL_ERROR);
                 return;
                 
             }
             
-            block(GEOPEG_FAILURE);
+            block(GP_INTERNAL_ERROR);
             return;
             
         }
         
-        block([NSNumber numberWithInt:GEOPEG_SUCCESS]);
+        block(GP_SUCCESS);
         
         
     }];

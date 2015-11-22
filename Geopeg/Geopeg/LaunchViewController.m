@@ -7,6 +7,7 @@
 //
 
 #import "LaunchViewController.h"
+# import "GeopegS3Util.h" // remove me
 
 @interface LaunchViewController ()
 
@@ -20,12 +21,22 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     GeopegLocationUtil *lUtil = [GeopegLocationUtil sharedInstance];
     
+    [GeopegUtil loadUserValues];
+    
     // See if credentials exist / are good
+    
+    
+    [[IP refresh] continueWithBlock:^id(AWSTask *task) {
+        
+        if (!task.result && (!task.error || task.error.code != GP_CONNECTION_FAILURE)) {
 
-    [util refreshAWSTokenWithBlock:^void(NSNumber * result) {
+            // We're already back at the login screen, just stop here
+            return [AWSTask taskWithResult:nil];
+            
+        }
         
         // Start location services to find where they are
         
@@ -61,31 +72,21 @@
             
         }
         
-        if (!util->username || !util->geopegToken || result == 0) {
-            
-            // If we have no username or token, we have to send them to login screen
-            // If refreshing AWS credentials fails, we have to send them to login screen
-            
-            UINavigationController *navCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Login Navigation Controller"];
-            [self presentViewController:navCont animated:YES completion:nil];
-            
-            return;
-            
-        }
-        
         // Send them to main screen
         
         UITabBarController *tabCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Main Tab Bar Controller"];
         [self presentViewController:tabCont animated:YES completion:nil];
         
-        if([result isEqualToNumber:[NSNumber numberWithInt:-1]]) {
+        if(task.error.code != GP_INTERNAL_ERROR && task.error.code != GP_JSONPARSE_FAILURE) {
             
             // If there was a connection issue, alert them
             
-            [tabCont presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
+            [tabCont presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
 
             
         }
+        
+        return [AWSTask taskWithResult:nil];
         
     }];
     

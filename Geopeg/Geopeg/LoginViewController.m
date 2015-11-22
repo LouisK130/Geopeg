@@ -13,11 +13,11 @@
 
 - (void) viewDidAppear:(BOOL)animated {
 
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
-    if (util->username) {
+    if (IP.username) {
         
-        [usernameField setText:util->username];
+        [usernameField setText:IP.username];
         
     }
     
@@ -50,20 +50,20 @@
 - (IBAction)loginPress:(id)sender {
     
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
     NSString *username = [usernameField text];
     NSString *password = [passwordField text];
     
     if ([username isEqualToString:@""] || [password isEqualToString:@""]) {
         
-        [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"All fields must be filled."] animated:YES completion:nil];
+        [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"All fields must be filled."] animated:YES completion:nil];
         
         return;
         
     }
 
-    util->username = username;
+    IP.username = username;
     
     [self loginWithPassword:password block:^(BOOL result) {
         
@@ -89,12 +89,33 @@
     
 }
 
+/*- (AWSTask *)loginWithPassword:(NSString *)password {
+    
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
+    
+    if (!IP.username) {
+        
+        // This should never happen...
+        
+        NSDictionary *info = [NSDictionary dictionaryWithObject:@"No username given" forKey:NSLocalizedDescriptionKey];
+        NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INVALID_CREDENTIALS userInfo:info];
+        
+        return [AWSTask taskWithError:error];
+        
+    }
+    
+    // Format the request
+    NSString *post = [NSString stringWithFormat:@"password=%@&username=%@", password, IP.username];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"login.php"];
+    
+}*/
+
 
 - (void)loginWithPassword:(NSString *)password block:(void (^)(BOOL)) block {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
-    if (!util->username) {
+    if (!IP.username) {
         
         // This should never happen...
         
@@ -106,9 +127,8 @@
     
     // Format the request
     
-    NSString *post = [NSString stringWithFormat:@"password=%@&username=%@", password, util->username];
-    
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"login.php"];
+    NSString *post = [NSString stringWithFormat:@"password=%@&username=%@", password, IP.username];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"login.php"];
     
     // Open the connection
     
@@ -116,7 +136,7 @@
         
         if (error != nil || [data length] == 0) {
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."]
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."]
                                animated:YES completion:nil];
 
             block(NO);
@@ -126,7 +146,7 @@
         
         // Attempt to make the response a nice NSDictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
@@ -134,20 +154,20 @@
             
             if ([errMsg isEqualToString:@"Invalid username"]) {
                 
-                [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Invalid username."] animated:YES completion:nil];
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Invalid username."] animated:YES completion:nil];
 
                 
             }
             
             else if ([errMsg isEqualToString:@"Invalid password"]) {
                 
-                [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Invalid password."] animated:YES completion:nil];
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Invalid password."] animated:YES completion:nil];
                 
             }
             
             else {
             
-                [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Something went wrong with the login request. Please retry."] animated:YES completion:nil];
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Something went wrong with the login request. Please retry."] animated:YES completion:nil];
                 
                 
                 
@@ -160,11 +180,12 @@
         
         // Save all the values we got as a response
         
-        util->geopegToken = [jsonResponse objectForKey:@"Geopeg_Token"];
-        util->awsID = [jsonResponse objectForKey:@"AWSId"];
-        util->awsToken = [jsonResponse objectForKey:@"AWSToken"];
+        IP.geopegId = [jsonResponse objectForKey:@"Geopeg_ID"];
+        IP.geopegToken = [jsonResponse objectForKey:@"Geopeg_Token"];
+        IP.identityId = [jsonResponse objectForKey:@"AWSId"];
+        [IP.logins setValue:[jsonResponse objectForKey:@"AWSToken"] forKey:@"login.geopeg"];
         
-        [util saveUserValues];
+        [GeopegUtil saveUserValues];
         
         block(YES);
         

@@ -8,23 +8,16 @@
 
 #import "GeopegUtil.h"
 
-@implementation GeopegUtil
-
 static GeopegUtil *_sharedInstance;
 
-- (id) init {
-    
-    if (self = [super init]) {
-        
-        [self loadUserValues];
-        
-    }
-    
-    return self;
-    
-}
+@implementation GeopegUtil
 
-+ (GeopegUtil *) sharedInstance {
+// This file only has class methods for util purposes
+
+// This first method works as something of a singleton to maintain
+// and distribute a reference to the AWS credentialsProvider object
+
++ (AWSCognitoCredentialsProvider *)getCredsProvider {
     
     if (!_sharedInstance) {
         
@@ -32,11 +25,22 @@ static GeopegUtil *_sharedInstance;
         
     }
     
-    return _sharedInstance;
+    return _sharedInstance->cp;
+}
+
++ (void)setCredsProvider:(AWSCognitoCredentialsProvider *)newCp {
+    
+    if (!_sharedInstance) {
+        
+        _sharedInstance = [[GeopegUtil alloc] init];
+        
+    }
+    
+    _sharedInstance->cp = newCp;
     
 }
 
-- (NSMutableURLRequest *)formatConnectionWithPostString:(NSString *)post filePath:(NSString *)path {
++ (NSMutableURLRequest *)formatConnectionWithPostString:(NSString *)post filePath:(NSString *)path {
     
     // Converted to POST data
     
@@ -52,17 +56,18 @@ static GeopegUtil *_sharedInstance;
     
     // Set some parameters of the request
     
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", @"http://192.168.1.2:8000/", path]]];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", @"http://10.0.0.55:8000/", path]]];
     [request setHTTPMethod:@"POST"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:postData];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setTimeoutInterval:30];
     
     return request;
 }
 
-- (NSDictionary *)parseJSONResponse:(NSData *)data {
++ (NSDictionary *)parseJSONResponse:(NSData *)data {
     
     // Parse it into JSON that we can work with
     
@@ -78,148 +83,50 @@ static GeopegUtil *_sharedInstance;
     
 }
 
-- (BOOL)saveUserValues {
++ (BOOL)saveUserValues {
     
-    NSError *error;
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
-    // Find the place to save it
+    NSError *err1;
+    NSError *err2;
+    NSError *err3;
     
-    NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    [FDKeychain saveItem:IP.username forKey:@"username" forService:@"Geopeg" error:&err1];
+    [FDKeychain saveItem:IP.geopegId forKey:@"geopegId" forService:@"Geopeg" error:&err2];
+    [FDKeychain  saveItem:IP.geopegToken forKey:@"geopegToken" forService:@"Geopeg" error:&err3];
     
-    NSString *plistPath = [rootPath stringByAppendingPathComponent:@"UserData.plist"];
-    
-    // Build the values into a dictionary
-    
-    NSDictionary *plistDict = [NSDictionary dictionaryWithObjects:
-        [NSArray arrayWithObjects: geopegToken, awsID, awsToken, username, nil]
-        forKeys:[NSArray arrayWithObjects:@"Geopeg_Token", @"AWSId", @"AWSToken", @"username", nil]];
-    
-    // Format it as savable data
-    
-    NSData *plistData = [NSPropertyListSerialization dataWithPropertyList:plistDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    
-    if (!plistData) {
+    if (!err1 && !err2 && !err3) {
         
-        NSLog(@"Error saving user values");
-        return NO;
+        return YES;
         
     }
     
-    [plistData writeToFile:plistPath atomically:YES];
+    return NO;
+}
+
++ (BOOL)loadUserValues {
     
-    return YES;
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
+    
+    NSError *err1;
+    NSError *err2;
+    NSError *err3;
+    
+    IP.username = [FDKeychain itemForKey:@"username" forService:@"Geopeg" error:&err1];
+    IP.geopegId = [FDKeychain itemForKey:@"geopegId" forService:@"Geopeg" error:&err2];
+    IP.geopegToken = [FDKeychain itemForKey:@"geopegToken" forService:@"Geopeg" error:&err3];
+    
+    if (!err1 && !err2 && !err3) {
+        
+        return YES;
+        
+    }
+    
+    return NO;
     
 }
 
-- (BOOL)loadUserValues {
-    
-    // Setup values
-    
-    NSError *error;
-    NSPropertyListFormat format;
-    NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *plistPath = [rootPath stringByAppendingPathComponent:@"UserData.plist"];
-    
-    // Make sure we have the right file path
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:plistPath]) {
-        
-        NSLog(@"UserData.plist did not exist for loading");
-        return NO;
-        
-    }
-    
-    // Read the file
-    
-    NSData *plistXML = [[NSFileManager defaultManager] contentsAtPath:plistPath];
-    
-    // Fromat as a dictionary we can read
-    
-    NSDictionary *tempDict = (NSDictionary *)[NSPropertyListSerialization propertyListWithData:plistXML options:NSPropertyListImmutable format:&format error:&error];
-    
-    if (!tempDict) {
-        
-        NSLog(@"Error reading plist: %@, format: %d", error, (int)format);
-        return NO;
-        
-    }
-    
-    // Put values in our memory
-    
-    self->username = [tempDict objectForKey:@"username"];
-    self->geopegToken = [tempDict objectForKey:@"Geopeg_Token"];
-    self->awsID = [tempDict objectForKey:@"AWSId"];
-    self->awsToken = [tempDict objectForKey:@"AWSToken"];
-    
-    return YES;
-    
-}
-
-- (void)refreshAWSTokenWithBlock:(void (^) (NSNumber *)) block {
-    
-    // We need a username stored
-    
-    if (!self->username || !self->geopegToken) {
-        
-        // Call the callback block with a failed result
-        
-        block(0);
-        return;
-        
-    }
-    
-    // Format the request
-    
-    NSString *post = [NSString stringWithFormat:@"token=%@&username=%@", self->geopegToken, self->username];
-    
-    NSMutableURLRequest *request = [self formatConnectionWithPostString:post filePath:@"login.php"];
-    
-    // Make the connection
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-       
-        if (error != nil || [data length] == 0) {
-            
-            // Returning -1 means a real error
-            // Probably failed to make a connection
-            
-            NSLog(@"Error with AWS Token Refresh request");
-            block([NSNumber numberWithInt:-1]);
-            return;
-            
-        }
-        
-        // Attempt to make the response a nice NSDictionary
-        
-        NSDictionary *jsonResponse = [self parseJSONResponse:data];
-        
-        if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-            
-            // Now this sort of error likely means that the token is invalid
-            // We want to force them to attempt login, so return 0
-            
-            NSLog(@"AWS Token Refresh request failed: %@", [jsonResponse objectForKey:@"Message"]);
-            block(0);
-            return;
-            
-        }
-        
-        // Save all the values we got as a response
-
-        self->geopegToken = [jsonResponse objectForKey:@"Geopeg_Token"];
-        self->awsID = [jsonResponse objectForKey:@"AWSId"];
-        self->awsToken = [jsonResponse objectForKey:@"AWSToken"];
-        
-        [self saveUserValues];
-        
-        block([NSNumber numberWithInt:1]);
-        
-        
-    }];
-    
-}
-
-- (UIAlertController *)createOkAlertWithTitle:(NSString *)title message:(NSString *)message {
++ (UIAlertController *)createOkAlertWithTitle:(NSString *)title message:(NSString *)message {
 
     UIAlertController *alertCont = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     

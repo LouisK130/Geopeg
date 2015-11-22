@@ -13,13 +13,13 @@
 
 - (IBAction)pressRecoverPass:(id)sender {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
-    util->email = [emailField text];
+    IP.email = [emailField text];
     
-    if ([util->email isEqualToString:@""]) {
+    if ([IP.email isEqualToString:@""]) {
         
-        [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Email cannot be empty."] animated:YES completion:nil];
+        [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Email cannot be empty."] animated:YES completion:nil];
         
         return;
         
@@ -27,7 +27,7 @@
     
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    [self requestPassResetForEmail:util->email completionBlock:^(BOOL result) {
+    [self requestPassResetForEmail:IP.email completionBlock:^(BOOL result) {
         
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
@@ -45,7 +45,7 @@
 
 - (IBAction)pressResetPass:(id) sender {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
     NSString *code = [codeField text];
     NSString *newPass = [newPassField text];
@@ -53,7 +53,7 @@
     
     if (!([newPass isEqualToString:newPassConf])) {
         
-        [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Passwords do not match."] animated:YES completion:nil];
+        [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Passwords do not match."] animated:YES completion:nil];
         
         return;
         
@@ -61,7 +61,7 @@
     
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    [self resetPassWithToken:code email:util->email newPass:newPass completionBlock:^(BOOL result) {
+    [self resetPassWithToken:code email:IP.email newPass:newPass completionBlock:^(BOOL result) {
         
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
@@ -89,17 +89,13 @@
 
 - (void)requestPassResetForEmail:(NSString *) email completionBlock:(void(^)(BOOL)) block {
     
-    // Helper functions
-    
-    GeopegUtil *util = [GeopegUtil sharedInstance];
-    
     // Format post string
     
     NSString *post = [NSString stringWithFormat:@"email=%@", email];
     
     // Format request
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"forgotpass.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"forgotpass.php"];
     
     // Open conn
     
@@ -109,7 +105,7 @@
         
         if (error != nil || [data length] == 0) {
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
             block(NO);
             return;
             
@@ -117,7 +113,7 @@
         
         // Attempt to read JSON into dictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
@@ -125,7 +121,7 @@
             
             if ([errMsg isEqualToString:@"Token expired"]) {
                 
-                [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Your recovery code is expired. Please request a new one."] animated:YES completion:nil];
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Your recovery code is expired. Please request a new one."] animated:YES completion:nil];
                 block(NO);
                 return;
                 
@@ -133,13 +129,13 @@
             
             else if ([errMsg isEqualToString:@"Invalid token"]) {
                 
-                [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Your recovery code is not valid. Please check to make sure you copied it properly."] animated:YES completion:nil];
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Your recovery code is not valid. Please check to make sure you copied it properly."] animated:YES completion:nil];
                 block(NO);
                 return;
                 
             }
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
             block(NO);
             return;
             
@@ -155,17 +151,13 @@
 
 - (void)resetPassWithToken:(NSString *) token email:(NSString *) email newPass:(NSString *) newPass completionBlock:(void(^)(BOOL)) block {
     
-    // Helper functions
-    
-    GeopegUtil *util = [GeopegUtil sharedInstance];
-    
     // Format post string
     
     NSString *post = [NSString stringWithFormat:@"recovery_token=%@&email=%@&new_pass=%@", token, email, newPass];
     
     // Format request
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"resetpass.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"resetpass.php"];
     
     // Open conn
     
@@ -175,7 +167,7 @@
         
         if (error != nil || [data length] == 0) {
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
             block(NO);
             return;
             
@@ -183,11 +175,11 @@
         
         // Attempt to read JSON into dictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
             
             block(NO);
             return;

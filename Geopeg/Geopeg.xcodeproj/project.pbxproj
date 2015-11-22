@@ -10,6 +10,7 @@
 		4FAE2D1E1B3F543A00C67DBF /* GeopegUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE2D1B1B3F543A00C67DBF /* GeopegUtil.m */; };
 		4FAE2D1F1B3F543A00C67DBF /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */; };
 		4FBB438E1B475BFB001D08DC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBB438D1B475BFB001D08DC /* CoreLocation.framework */; };
+		4FC1A3D31BFA97470053AD5F /* GeopegIdentityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FC1A3D21BFA97470053AD5F /* GeopegIdentityProvider.m */; };
 		4FC690511B7178C70077E83E /* GeopegS3Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FC690501B7178C70077E83E /* GeopegS3Util.m */; };
 		4FCE22231B3635E3007DA5C0 /* PassResetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE22221B3635E3007DA5C0 /* PassResetViewController.m */; };
 		4FCE22261B371F94007DA5C0 /* GeopegDownloadUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE22251B371F94007DA5C0 /* GeopegDownloadUtil.m */; };
@@ -46,6 +47,8 @@
 		4FAE2D1C1B3F543A00C67DBF /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
 		4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
 		4FBB438D1B475BFB001D08DC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4FC1A3D11BFA97470053AD5F /* GeopegIdentityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegIdentityProvider.h; sourceTree = "<group>"; };
+		4FC1A3D21BFA97470053AD5F /* GeopegIdentityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegIdentityProvider.m; sourceTree = "<group>"; };
 		4FC6904F1B7178C70077E83E /* GeopegS3Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeopegS3Util.h; sourceTree = "<group>"; };
 		4FC690501B7178C70077E83E /* GeopegS3Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeopegS3Util.m; sourceTree = "<group>"; };
 		4FCE22211B3635E3007DA5C0 /* PassResetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PassResetViewController.h; sourceTree = "<group>"; };
@@ -138,6 +141,8 @@
 				4FC690501B7178C70077E83E /* GeopegS3Util.m */,
 				4FAE2D1A1B3F543A00C67DBF /* GeopegUtil.h */,
 				4FAE2D1B1B3F543A00C67DBF /* GeopegUtil.m */,
+				4FC1A3D11BFA97470053AD5F /* GeopegIdentityProvider.h */,
+				4FC1A3D21BFA97470053AD5F /* GeopegIdentityProvider.m */,
 				4FAE2D1C1B3F543A00C67DBF /* RegisterViewController.h */,
 				4FAE2D1D1B3F543A00C67DBF /* RegisterViewController.m */,
 				4FCE22211B3635E3007DA5C0 /* PassResetViewController.h */,
@@ -337,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FAE2D1E1B3F543A00C67DBF /* GeopegUtil.m in Sources */,
+				4FC1A3D31BFA97470053AD5F /* GeopegIdentityProvider.m in Sources */,
 				4FCE222B1B3730A4007DA5C0 /* GeopegSQLiteUtil.m in Sources */,
 				4FCE22261B371F94007DA5C0 /* GeopegDownloadUtil.m in Sources */,
 				4FD54E571B096D7700CE7310 /* LoginViewController.m in Sources */,

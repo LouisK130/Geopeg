@@ -17,6 +17,24 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [GeopegUtil loadUserValues];
+    
+    // Initialize the Amazon Cognito credentials provider
+    
+    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc]
+                                                          initWithRegionType:AWSRegionUSEast1 identityPoolId:@"us-east-1:d7954a79-61f7-45aa-81ac-5d376864666b"];
+    
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSEast1 credentialsProvider:credentialsProvider];
+    
+    [AWSServiceManager defaultServiceManager].defaultServiceConfiguration = configuration;
+    
+    GeopegIdentityProvider *identityProvider = [[GeopegIdentityProvider alloc] init];
+    
+    [credentialsProvider setIdentityProvider:identityProvider];
+    
+    [GeopegUtil setCredsProvider:credentialsProvider];
+    
     return YES;
 }
 

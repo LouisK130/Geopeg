@@ -14,7 +14,7 @@
 
 - (IBAction)submitRegisterPress:(id)sender {
     
-    GeopegUtil *util = [GeopegUtil sharedInstance];
+    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
     NSString *username = [regUsername text];
     NSString *pass = [regPassword text];
@@ -26,7 +26,7 @@
         [passConf isEqualToString:@""] ||
         [email isEqualToString:@""]) {
         
-        [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"All fields are required."] animated:YES completion:nil];
+        [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"All fields are required."] animated:YES completion:nil];
         
         return;
         
@@ -34,7 +34,7 @@
     
     if (!([pass isEqualToString:passConf])) {
         
-        [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"The passwords entered do not match."] animated:YES completion:nil];
+        [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"The passwords entered do not match."] animated:YES completion:nil];
         
         return;
         
@@ -49,7 +49,7 @@
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            util->username = username;
+            IP.username = username;
             
             // Get the nav controller
             
@@ -89,15 +89,11 @@
 
 - (void)registerWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completionBlock:(void (^)(BOOL)) block {
     
-    // Some helper functions
-    
-    GeopegUtil *util = [GeopegUtil sharedInstance];
-    
     // Format the request
     
     NSString *post = [NSString stringWithFormat:@"username=%@&email=%@&password=%@", username, email, password];
     
-    NSMutableURLRequest *request = [util formatConnectionWithPostString:post filePath:@"register.php"];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"register.php"];
     
     // Open the connection
     
@@ -107,7 +103,7 @@
         
         if (error != nil || [data length] == 0) {
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
             
             block(NO);
             return;
@@ -116,7 +112,7 @@
         
         // Attempt to read JSON into dictionary
         
-        NSDictionary *jsonResponse = [util parseJSONResponse:data];
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
         
         if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
@@ -150,7 +146,7 @@
                 
             }
             
-            [self presentViewController:[util createOkAlertWithTitle:@"Error" message:@"Something went wrong with the registration request. Please retry."] animated:YES completion:nil];
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Something went wrong with the registration request. Please retry."] animated:YES completion:nil];
             
             NSLog(@"Error:%@", errMsg);
             
