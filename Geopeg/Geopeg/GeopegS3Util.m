@@ -69,7 +69,7 @@ static GeopegS3Util *_sharedInstance;
     
 }
 
-- (void) uploadGeopegWithURL:(NSURL *) url {
+- (AWSTask *) uploadGeopegWithURL:(NSURL *) url {
     
     GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
@@ -86,17 +86,15 @@ static GeopegS3Util *_sharedInstance;
     uploadRequest.body = url;
     uploadRequest.key = s3Path;
     
-    AWSS3TransferManager *tm = [AWSS3TransferManager defaultS3TransferManager];
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
     
-    NSLog(@"Uploading...");
+    AWSS3TransferManager *tm = [AWSS3TransferManager defaultS3TransferManager];
     
     [[tm upload:uploadRequest] continueWithExecutor:[AWSExecutor mainThreadExecutor] withBlock:^id(AWSTask *task) {
         
         if (task.error) {
             
-            // Something went wrong...
-            NSLog(@"Something went wrong uploading geopeg:");
-            NSLog(@"%@", task.error);
+            [taskSource setError:task.error];
             
         }
         
@@ -106,11 +104,15 @@ static GeopegS3Util *_sharedInstance;
             // Lets get rid of the image/video and cache it
             
             [self copyFileToCacheFromURL:url withNewName:newName];
+            
+            [taskSource setError:GP_SUCCESS];
         }
         
         return nil;
         
     }];
+    
+    return taskSource.task;
     
 }
 

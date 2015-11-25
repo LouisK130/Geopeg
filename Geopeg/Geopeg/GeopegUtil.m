@@ -138,4 +138,61 @@ static GeopegUtil *_sharedInstance;
     
 }
 
++ (UIViewController *)getTopViewController {
+    
+    UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    while (top.presentedViewController) {
+        
+        top = top.presentedViewController;
+        
+    }
+    
+    return top;
+    
+}
+
++ (AWSTask *)makeAsyncRequest:(NSURLRequest *)request {
+    
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        // Check for failure
+        
+        if (error) {
+            
+            [taskSource setError:error];
+            
+            [[self getTopViewController] presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
+            
+            return;
+            
+        }
+        
+        // Attempt to read JSON into dictionary
+        
+        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
+        
+        if (!jsonResponse) {
+            
+            NSError *jsonError = [NSError errorWithDomain:@"Geopeg" code:GP_JSONPARSE_FAILURE userInfo:nil];
+            [taskSource setError:jsonError];
+            
+            [[self getTopViewController] presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Invalid server response, please try again."] animated:YES completion:nil];
+            
+            return;
+            
+        }
+        
+        // If we made it here, it either succeeded or failed internally (on PHP end) which is handled in the next block
+        
+        [taskSource setResult:jsonResponse];
+        
+    }];
+    
+    return taskSource.task;
+    
+}
+
 @end

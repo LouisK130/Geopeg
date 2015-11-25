@@ -53,6 +53,8 @@ typedef enum GeopegErrorCodes {GP_SUCCESS, GP_CONNECTION_FAILURE, GP_INTERNAL_ER
 
 + (UIAlertController *)createOkAlertWithTitle:(NSString *) title message:(NSString *) message;
 
++ (UIViewController *)getTopViewController;
 
++ (AWSTask *)makeAsyncRequest:(NSURLRequest *) request;
 
 @end

@@ -19,7 +19,7 @@
     
 }
 
-- (void)registerWithUsername:(NSString *) username password:(NSString *) password email:(NSString *) email completionBlock:(void (^)(BOOL)) block;
+- (AWSTask *)registerWithUsername:(NSString *) username password:(NSString *) password email:(NSString *) email;
 
 - (IBAction)submitRegisterPress:(id) sender;
 

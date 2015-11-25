@@ -25,6 +25,6 @@ static NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 
 - (BOOL)copyFileToCacheFromURL:(NSURL *) url withNewName:(NSString *) newName;
 
-- (void) uploadGeopegWithURL:(NSURL *) url;
+- (AWSTask *) uploadGeopegWithURL:(NSURL *) url;
 
 @end

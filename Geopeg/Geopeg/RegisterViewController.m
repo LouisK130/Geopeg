@@ -41,11 +41,11 @@
     }
     
     
-    [self registerWithUsername:username password:pass email:email completionBlock:^(BOOL result) {
+    [[self registerWithUsername:username password:pass email:email] continueWithBlock:^id(AWSTask *task) {
         
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
-        if (result == YES) {
+        if (task.result == GP_SUCCESS) {
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
@@ -76,6 +76,8 @@
             
         }
         
+        return nil;
+        
     }];
     
     [regUsername resignFirstResponder];
@@ -87,38 +89,28 @@
     
 }
 
-- (void)registerWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completionBlock:(void (^)(BOOL)) block {
+- (AWSTask *)registerWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email {
     
     // Format the request
     
     NSString *post = [NSString stringWithFormat:@"username=%@&email=%@&password=%@", username, email, password];
-    
     NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"register.php"];
+    
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
     
     // Open the connection
     
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
         
-        // Check for failure
+        NSDictionary *json = task.result;
         
-        if (error != nil || [data length] == 0) {
+        if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
-            
-            block(NO);
-            return;
-            
-        }
-        
-        // Attempt to read JSON into dictionary
-        
-        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
-        
-        if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-            
-            NSString *errMsg = [jsonResponse objectForKey:@"Message"];
+            NSString *errMsg = [json objectForKey:@"Message"];
             
             if ([errMsg isEqualToString:@"Email already in use."] || [errMsg isEqualToString:@"Username already in use."]) {
+                
+                // Make error popup about duplicate email/username
                 
                 UIAlertController *alertCont = [UIAlertController alertControllerWithTitle:@"Error" message:errMsg preferredStyle:UIAlertControllerStyleAlert];
                 
@@ -140,26 +132,26 @@
                 
                 [self presentViewController:alertCont animated:YES completion:nil];
                 
-                block(NO);
-                
-                return;
-                
             }
             
             [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Something went wrong with the registration request. Please retry."] animated:YES completion:nil];
             
-            NSLog(@"Error:%@", errMsg);
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+            NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
             
-            block(NO);
-            return;
+            [taskSource setError:error];
             
         }
         
         // If we made it to here, registration succeded
         
-        block(YES);
+        [taskSource setResult:GP_SUCCESS];
+        
+        return nil;
         
     }];
+    
+    return taskSource.task;
     
 }
 

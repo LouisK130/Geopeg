@@ -87,7 +87,7 @@
     
 }
 
-- (void)requestPassResetForEmail:(NSString *) email completionBlock:(void(^)(BOOL)) block {
+- (AWSTask *)requestPassResetForEmail:(NSString *) email {
     
     // Format post string
     
@@ -99,14 +99,18 @@
     
     // Open conn
     
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
+    
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
         // Check for failure
         
-        if (error != nil || [data length] == 0) {
+        if (error) {
             
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
-            block(NO);
+            [taskSource setError:error];
+            
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
+            
             return;
             
         }

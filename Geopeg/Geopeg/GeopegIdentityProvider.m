@@ -31,12 +31,6 @@
 
 - (AWSTask *)refresh {
     
-    if ([NSThread isMainThread]) {
-        
-        NSLog(@"Main thread");
-        
-    }
-    
     if (!self.username || !self.geopegToken) {
         
         // If no username or token, we can't go further. User needs to login.
@@ -51,41 +45,38 @@
     // Format the request
     
     NSString *post = [NSString stringWithFormat:@"token=%@&username=%@", self.geopegToken, self.username];
-    
     NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"login.php"];
     
-    // Make the connection
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
     
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+    // Connect and request data
     
-        if (!data) {
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
         
-            return;
+        NSDictionary *json = task.result;
         
-        }
-    
-        NSDictionary *json = [GeopegUtil parseJSONResponse:data];
-    
-        if (!json) {
-        
-            return;
-        
-        }
-        
+        // Failed internally?
         if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-        
-            return;
+            
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[json objectForKey:@"Message"] forKey:NSLocalizedDescriptionKey];
+            NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
+            [taskSource setError:error];
             
         }
         
+        // Success
         // Save all the values we got as a response
-    
+        
         self.identityId = [json objectForKey:@"AWSId"];
         self.token = [json objectForKey:@"AWSToken"];
         
+        [taskSource setResult:GP_SUCCESS];
+        
+        return nil;
+        
     }];
     
-    return nil;
+    return taskSource.task;
     
 }
 
@@ -94,8 +85,6 @@
     self.identityId = nil;
     self.logins = nil;
     self.geopegToken = nil;
-    self.username = nil;
-    self.email = nil;
     self.geopegId = nil;
     
     UIStoryboard *sb = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];

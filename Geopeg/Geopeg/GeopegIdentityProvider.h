@@ -18,4 +18,6 @@
 @property (strong, atomic) NSString *geopegId;
 @property (strong, atomic) NSString *token;
 
+- (void)logout;
+
 @end

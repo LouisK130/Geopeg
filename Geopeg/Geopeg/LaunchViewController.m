@@ -31,7 +31,7 @@
     
     [[IP refresh] continueWithBlock:^id(AWSTask *task) {
         
-        if (!task.result && (!task.error || task.error.code != GP_CONNECTION_FAILURE)) {
+        if (task.error && task.error.code == GP_INVALID_CREDENTIALS) {
 
             // We're already back at the login screen, just stop here
             return [AWSTask taskWithResult:nil];
@@ -72,21 +72,31 @@
             
         }
         
-        // Send them to main screen
-        
-        UITabBarController *tabCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Main Tab Bar Controller"];
-        [self presentViewController:tabCont animated:YES completion:nil];
-        
         if(task.error.code != GP_INTERNAL_ERROR && task.error.code != GP_JSONPARSE_FAILURE) {
             
-            // If there was a connection issue, alert them
-            
-            [tabCont presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
-
+            if (!IP.username || !IP.geopegToken) {
+                
+                // Not logged in, send to login
+                
+                [IP logout];
+                
+            }
+            else {
+                
+                // Send them to main screen
+                
+                UITabBarController *tabCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Main Tab Bar Controller"];
+                [self presentViewController:tabCont animated:YES completion:nil];
+                
+                // Alert them to connection issue
+                
+                [tabCont presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
+                
+            }
             
         }
         
-        return [AWSTask taskWithResult:nil];
+        return nil;
         
     }];
     

@@ -1,0 +1,29 @@
+PODS:
+  - AWSCore (2.3.0)
+  - AWSS3 (2.3.0):
+    - AWSCore (= 2.3.0)
+  - FDKeychain (1.2.2)
+  - FMDB/common (2.5)
+  - FMDB/standalone (2.5):
+    - FMDB/common
+    - FMDB/standalone/default (= 2.5)
+  - FMDB/standalone/default (2.5):
+    - FMDB/common
+    - sqlite3
+  - sqlite3 (3.9.2.0):
+    - sqlite3/common (= 3.9.2.0)
+  - sqlite3/common (3.9.2.0)
+
+DEPENDENCIES:
+  - AWSS3
+  - FDKeychain
+  - FMDB/standalone
+
+SPEC CHECKSUMS:
+  AWSCore: dc200c885c9799f9f5d3ab9ec38a9c4b44d680f9
+  AWSS3: 0185482a8136da9c7542a767567ee18106b38bca
+  FDKeychain: ce0d5e4fac972c28e921e893ffe982832695d17b
+  FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
+  sqlite3: 5e6238a0a38f7356c0b672290be9ea95e8ceee9f
+
+COCOAPODS: 0.37.2
