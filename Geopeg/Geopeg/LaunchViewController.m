@@ -7,7 +7,6 @@
 //
 
 #import "LaunchViewController.h"
-# import "GeopegS3Util.h" // remove me
 
 @interface LaunchViewController ()
 
@@ -34,7 +33,7 @@
         if (task.error && task.error.code == GP_INVALID_CREDENTIALS) {
 
             // We're already back at the login screen, just stop here
-            return [AWSTask taskWithResult:nil];
+            return nil;
             
         }
         
@@ -72,27 +71,12 @@
             
         }
         
-        if(task.error.code != GP_INTERNAL_ERROR && task.error.code != GP_JSONPARSE_FAILURE) {
-            
-            if (!IP.username || !IP.geopegToken) {
+        if((task.error && task.error.code == GP_CONNECTION_FAILURE) || !task.error) {
                 
-                // Not logged in, send to login
+            // Send them to main screen
                 
-                [IP logout];
-                
-            }
-            else {
-                
-                // Send them to main screen
-                
-                UITabBarController *tabCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Main Tab Bar Controller"];
-                [self presentViewController:tabCont animated:YES completion:nil];
-                
-                // Alert them to connection issue
-                
-                [tabCont presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Unable to reach the servers."] animated:YES completion:nil];
-                
-            }
+            UITabBarController *tabCont = [self.storyboard instantiateViewControllerWithIdentifier:@"Main Tab Bar Controller"];
+            [self presentViewController:tabCont animated:YES completion:nil];
             
         }
         

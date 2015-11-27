@@ -89,7 +89,7 @@
     
 }
 
-/*- (AWSTask *)loginWithPassword:(NSString *)password {
+- (AWSTask *)loginWithPassword:(NSString *)password {
     
     GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
     
@@ -108,54 +108,26 @@
     NSString *post = [NSString stringWithFormat:@"password=%@&username=%@", password, IP.username];
     NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"login.php"];
     
-}*/
-
-
-- (void)loginWithPassword:(NSString *)password block:(void (^)(BOOL)) block {
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
     
-    GeopegIdentityProvider *IP = [GeopegUtil getCredsProvider].identityProvider;
+    // Make the conn
     
-    if (!IP.username) {
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
         
-        // This should never happen...
+        NSDictionary *json = task.result;
         
-        NSLog(@"Login failed, no username");
-        block(NO);
-        return;
-        
-    }
-    
-    // Format the request
-    
-    NSString *post = [NSString stringWithFormat:@"password=%@&username=%@", password, IP.username];
-    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"login.php"];
-    
-    // Open the connection
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        
-        if (error != nil || [data length] == 0) {
+        if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."]
-                               animated:YES completion:nil];
-
-            block(NO);
-            return;
+            NSString *errMsg = [json objectForKey:@"Message"];
             
-        }
-        
-        // Attempt to make the response a nice NSDictionary
-        
-        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
-        
-        if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-            
-            NSString *errMsg = [jsonResponse objectForKey:@"Message"];
+            NSError *credsError = [NSError errorWithDomain:@"Geopeg" code:GP_INVALID_CREDENTIALS userInfo:nil];
             
             if ([errMsg isEqualToString:@"Invalid username"]) {
                 
                 [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Invalid username."] animated:YES completion:nil];
-
+                
+                [taskSource setError:credsError];
+                
                 
             }
             
@@ -163,33 +135,37 @@
                 
                 [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Invalid password."] animated:YES completion:nil];
                 
+                [taskSource setError:credsError];
+                
             }
             
             else {
-            
+                
                 [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Something went wrong with the login request. Please retry."] animated:YES completion:nil];
                 
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+                NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
                 
+                [taskSource setError:error];
                 
             }
-
-            block(NO);
-            return;
             
         }
         
-        // Save all the values we got as a response
-        
-        IP.geopegId = [jsonResponse objectForKey:@"Geopeg_ID"];
-        IP.geopegToken = [jsonResponse objectForKey:@"Geopeg_Token"];
-        IP.identityId = [jsonResponse objectForKey:@"AWSId"];
-        [IP.logins setValue:[jsonResponse objectForKey:@"AWSToken"] forKey:@"login.geopeg"];
-        
+        IP.geopegId = [json objectForKey:@"Geopeg_ID"];
+        IP.geopegToken = [json objectForKey:@"Geopeg_Token"];
+        IP.identityId = [json objectForKey:@"AWSId"];
+        IP.token = [json objectForKey:@"AWSToken"];
+
         [GeopegUtil saveUserValues];
         
-        block(YES);
+        [taskSource setResult:GP_SUCCESS];
         
+        return nil;
+    
     }];
+    
+    return taskSource.task;
     
 }
 

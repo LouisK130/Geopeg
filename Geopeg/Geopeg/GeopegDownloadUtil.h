@@ -9,24 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "GeopegUtil.h"
 
-@interface GeopegDownloadUtil : NSObject {
-    
-    @public NSCache *storedDataRequests;
-    @public NSMutableDictionary *storedSelfImageData;
-    
-}
+@interface GeopegDownloadUtil : NSObject
 
-// Get the only available instance
++ (AWSTask *) requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *) size startDate:(NSString *) startDate currentMGRS:(NSString *) currentMGRS;
 
-+ (GeopegDownloadUtil *)sharedInstance;
++ (AWSTask *) requestSelfImageDataWithStartDate:(NSString *)startDate;
 
-// Both of these functions store information in their
-// respective NSCache declared above
-
-- (void) requestImageDataForLocation:(NSString *)mgrsid size:(NSNumber *) size startDate:(NSString *) startDate currentMGRS:(NSString *) currentMGRS completionBlock:(void (^) (int)) block;
-
-- (void) requestSelfImageDataWithStartDate:(NSString *)startDate completionBlock:(void (^) (int)) block;
-
-- (void) uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption completionBlock:(void (^) (int)) block;
++ (AWSTask *) uploadImageDataWithS3Path:(NSString *)s3path mgrsid:(NSString *)mgrsid caption:(NSString *)caption;
 
 @end

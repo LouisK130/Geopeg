@@ -35,7 +35,7 @@
         
         // If no username or token, we can't go further. User needs to login.
         
-        [self logout];
+        [self logoutLocalOnly:YES];
         
         NSError *loggedOut = [NSError errorWithDomain:@"Geopeg" code:GP_INVALID_CREDENTIALS userInfo:nil];
         return [AWSTask taskWithError:loggedOut];
@@ -51,7 +51,15 @@
     
     // Connect and request data
     
-    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
+    [[GeopegUtil makeAsyncRequest:request] continueWithBlock:^id(AWSTask *task) {
+        
+        if (task.error) {
+            
+            // If request failed, just pass the error along
+            [taskSource setError:task.error];
+            return nil;
+            
+        }
         
         NSDictionary *json = task.result;
         
@@ -80,7 +88,7 @@
     
 }
 
-- (void)logout {
+- (AWSTask *)logoutLocalOnly:(BOOL) localOnly {
     
     self.identityId = nil;
     self.logins = nil;
@@ -92,7 +100,43 @@
     UIViewController *root = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [root presentViewController:navCont animated:YES completion:nil];
     
+    if (localOnly) {
+        
+        return [AWSTask taskWithResult:nil];
+        
+    }
+    
     // Needs to go to logout on PhP too, invalidate GeopegToken
+    // TO DO go lookup what needs to be sent in logout.php ...
+    
+    NSString *post = [NSString stringWithFormat:@"username=%@&token=%@", self.username, self.geopegToken];
+    NSMutableURLRequest *request = [GeopegUtil formatConnectionWithPostString:post filePath:@"logout.php"];
+    
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
+    
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
+        
+        NSDictionary *json = task.result;
+        
+        if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
+            
+            // Lookup what kind of errors can result ...
+            
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[json objectForKey:@"Message"] forKey:NSLocalizedDescriptionKey];
+            
+            NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
+            
+            [taskSource setError:error];
+            
+        }
+        
+        [taskSource setResult:GP_SUCCESS];
+        
+        return nil;
+        
+    }];
+    
+    return taskSource.task;
     
 }
 

@@ -56,7 +56,7 @@ static GeopegUtil *_sharedInstance;
     
     // Set some parameters of the request
     
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", @"http://10.0.0.55:8000/", path]]];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", @"http://[2601:18e:c100:8444:2d2b:c807:a3f8:9feb]:8000/", path]]];
     [request setHTTPMethod:@"POST"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -162,7 +162,10 @@ static GeopegUtil *_sharedInstance;
         
         if (error) {
             
-            [taskSource setError:error];
+            // Not really interested in specifics except for debugging. Only care that the connection failed.
+            NSError *connError = [NSError errorWithDomain:@"Geopeg" code:GP_CONNECTION_FAILURE userInfo:nil];
+            
+            [taskSource setError:connError];
             
             [[self getTopViewController] presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
             

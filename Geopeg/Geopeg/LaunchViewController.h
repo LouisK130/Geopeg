@@ -11,6 +11,7 @@
 #import "GeopegLocationUtil.h"
 #import "GeopegUtil.h"
 #import "GeopegLocationUtil.h"
+#import "GeopegS3Util.h"
 
 @interface LaunchViewController : UIViewController {
     

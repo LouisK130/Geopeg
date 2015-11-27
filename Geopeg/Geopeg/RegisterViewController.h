@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AWSCore/AWSCore.h"
 
 @interface RegisterViewController : UIViewController {
     

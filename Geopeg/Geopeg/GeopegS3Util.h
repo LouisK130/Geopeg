@@ -12,19 +12,22 @@
 #import "GeopegUtil.h"
 
 static NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+static NSString *s3Bucket = @"geopegbucket";
 
 @interface GeopegS3Util : NSObject
 
-+ (GeopegS3Util *) sharedInstance;
-
-- (NSString *)generateRandomS3Path;
++ (NSString *)generateRandomS3Path;
 
 // Takes a saved image or video and copies to Library/Caches
 // Also renames it a random 10 length string
 // Returns success bool
 
-- (BOOL)copyFileToCacheFromURL:(NSURL *) url withNewName:(NSString *) newName;
++ (BOOL)copyFileToCacheFromURL:(NSURL *) url withNewName:(NSString *) newName;
 
-- (AWSTask *) uploadGeopegWithURL:(NSURL *) url;
++ (AWSTask *) uploadGeopegWithURL:(NSURL *) url;
+
++ (AWSTask *) downloadGeopegFromS3Path:(NSString *) path;
+
++ (AWSTask *) deleteGeopegFromS3Path:(NSString *) path;
 
 @end

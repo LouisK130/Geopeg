@@ -18,6 +18,6 @@
 @property (strong, atomic) NSString *geopegId;
 @property (strong, atomic) NSString *token;
 
-- (void)logout;
+- (AWSTask *)logoutLocalOnly:(BOOL) localOnly;
 
 @end

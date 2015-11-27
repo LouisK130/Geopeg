@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AWSCore/AWSCore.h"
 
 @interface PassResetViewController : UIViewController {
     
@@ -17,8 +18,8 @@
     
 }
 
-- (void)requestPassResetForEmail:(NSString *) email completionBlock:(void(^)(BOOL)) block;
+- (AWSTask *)requestPassResetForEmail:(NSString *) email;
 
-- (void)resetPassWithToken:(NSString *) token email:(NSString *) email newPass:(NSString *) newPass completionBlock:(void(^)(BOOL)) block;
+- (AWSTask *)resetPassWithToken:(NSString *) token email:(NSString *) email newPass:(NSString *) newPass;
 
 @end

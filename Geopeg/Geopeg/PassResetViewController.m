@@ -27,17 +27,19 @@
     
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    [self requestPassResetForEmail:IP.email completionBlock:^(BOOL result) {
+    [[self requestPassResetForEmail:IP.email] continueWithBlock:^id(AWSTask *task) {
         
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
-        if (result == YES) {
+        if (task.result) {
             
             UIViewController *resetPage = [self.storyboard instantiateViewControllerWithIdentifier:@"ResetPassView"];
             UINavigationController *navCont = (UINavigationController *)[self parentViewController];
             [navCont pushViewController:resetPage animated:YES];
             
         }
+        
+        return nil;
         
     }];
     
@@ -61,11 +63,11 @@
     
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    [self resetPassWithToken:code email:IP.email newPass:newPass completionBlock:^(BOOL result) {
+    [[self resetPassWithToken:code email:IP.email newPass:newPass] continueWithBlock:^id(AWSTask *task) {
         
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
-        if (result == YES) {
+        if (task.result) {
             
             UIAlertController *alertCont = [UIAlertController alertControllerWithTitle:@"Success" message:@"Password changed." preferredStyle:UIAlertControllerStyleAlert];
             
@@ -82,6 +84,8 @@
             [self presentViewController:alertCont animated:YES completion:nil];
             
         }
+        
+        return nil;
         
     }];
     
@@ -101,59 +105,39 @@
     
     AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
     
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
         
-        // Check for failure
+        NSDictionary *json = task.result;
         
-        if (error) {
+        if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
+            
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
+            
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[json objectForKey:@"Message"] forKey:NSLocalizedDescriptionKey];
+            
+            NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
             
             [taskSource setError:error];
             
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
+        }
+        
+        else {
             
-            return;
+            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Email sent" message:@"Please go check your email for your recovery code."] animated:YES completion:nil];
+            
+            [taskSource setResult:GP_SUCCESS];
             
         }
         
-        // Attempt to read JSON into dictionary
-        
-        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
-        
-        if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-            
-            NSString *errMsg = [jsonResponse objectForKey:@"Message"];
-            
-            if ([errMsg isEqualToString:@"Token expired"]) {
-                
-                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Your recovery code is expired. Please request a new one."] animated:YES completion:nil];
-                block(NO);
-                return;
-                
-            }
-            
-            else if ([errMsg isEqualToString:@"Invalid token"]) {
-                
-                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Your recovery code is not valid. Please check to make sure you copied it properly."] animated:YES completion:nil];
-                block(NO);
-                return;
-                
-            }
-            
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
-            block(NO);
-            return;
-            
-        }
-        
-        // If we made it to here, it succeded
-        
-        block(YES);
-        
+        return nil;
+    
     }];
+    
+    return taskSource.task;
     
 }
 
-- (void)resetPassWithToken:(NSString *) token email:(NSString *) email newPass:(NSString *) newPass completionBlock:(void(^)(BOOL)) block {
+- (AWSTask *)resetPassWithToken:(NSString *) token email:(NSString *) email newPass:(NSString *) newPass {
     
     // Format post string
     
@@ -165,36 +149,54 @@
     
     // Open conn
     
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    AWSTaskCompletionSource *taskSource = [AWSTaskCompletionSource taskCompletionSource];
+    
+    [[GeopegUtil makeAsyncRequest:request] continueWithSuccessBlock:^id(AWSTask *task) {
         
-        // Check for failure
+        NSDictionary *json = task.result;
         
-        if (error != nil || [data length] == 0) {
+        if ([[json objectForKey:@"Result"] isEqualToString:@"Failure"]) {
             
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was a problem reaching the servers. Please check your connection and retry."] animated:YES completion:nil];
-            block(NO);
-            return;
+            NSString *msg = [json objectForKey:@"Message"];
+            
+            NSError *credsError = [NSError errorWithDomain:@"Geopeg" code:GP_INVALID_CREDENTIALS userInfo:nil];
+            
+            if ([msg isEqualToString:@"Token expired"]) {
+                
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"Your recovery code has expired. Please request a new one."] animated:YES completion:nil];
+                
+                [taskSource setError:credsError];
+                
+            }
+            
+            else if ([msg isEqualToString:@"Invalid token"]) {
+                
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"This is not a valid recovery code. Please make sure you copied it correctly."] animated:YES completion:nil];
+                
+                [taskSource setError:credsError];
+                
+            }
+            
+            else {
+                
+                [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"An internal error occured. Please retry."] animated:YES completion:nil];
+                
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey];
+                NSError *error = [NSError errorWithDomain:@"Geopeg" code:GP_INTERNAL_ERROR userInfo:userInfo];
+                
+                [taskSource setError:error];
+                
+            }
             
         }
         
-        // Attempt to read JSON into dictionary
+        [taskSource setResult:GP_SUCCESS];
         
-        NSDictionary *jsonResponse = [GeopegUtil parseJSONResponse:data];
-        
-        if ([[jsonResponse objectForKey:@"Result"] isEqualToString:@"Failure"]) {
-            
-            [self presentViewController:[GeopegUtil createOkAlertWithTitle:@"Error" message:@"There was an internal issue. Please retry later."] animated:YES completion:nil];
-            
-            block(NO);
-            return;
-            
-        }
-        
-        // If we made it to here, it succeded
-        
-        block(YES);
-        
+        return nil;
+    
     }];
+    
+    return taskSource.task;
     
 }
 

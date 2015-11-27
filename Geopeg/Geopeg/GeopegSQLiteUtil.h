@@ -10,8 +10,7 @@
 #import <sqlite3.h>
 #import <FMDB.h>
 
-// Realistically, I think SQLite will only be used for self posted images
-// All others are too temporary to warrant long term storage
+// Unsure if this file will be used. I'm thinking it's really pretty useless. Probably won't use sqlite at all.
 
 @interface GeopegSQLiteUtil : NSObject {
     
